@@ -68,7 +68,7 @@ tensorboard-data-server==0.6.1
 tensorboard-plugin-wit==1.8.0
 termcolor==1.1.0
 toml==0.10.2
-torch==1.8.1
+torch==1.8.0
 torchmetrics==0.6.2
 torchtext==0.9.1
 torchvision==0.9.1
