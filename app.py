@@ -1,6 +1,6 @@
 import os
 import time
-
+import cv2
 from flask import Flask
 from flask import render_template, Response, request, send_from_directory, flash, url_for
 from flask import current_app as app
@@ -45,6 +45,17 @@ lstm_classifier.eval()
 class DataObject():
     pass
 
+def gen_frames(): 
+    stream = cv2.VideoCapture(0) 
+    while True:
+        success, frame = stream.read()  # read the camera frame
+        if not success:
+            break
+        else:
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
 
 def checkFileType(f: str):
     return f.split('.')[-1] in ['mp4']
@@ -101,7 +112,12 @@ def sample():
     obj.video = "sample_video.mp4"
     return render_template('/index.html', obj=obj)
 
-
+@app.route('/video_feed', methods=['POST'])
+def video_feed():
+    print(UPLOAD_FOLDER)
+    Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return eturn Response(analyse_video(pose_detector, lstm_classifier, filename), mimetype='text/event-stream')
+    
 @app.route('/files/<filename>')
 def get_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
@@ -109,6 +125,7 @@ def get_file(filename):
 
 @app.route('/analyzed_files/<filename>')
 def get_analyzed_file(filename):
+    print(UPLOAD_FOLDER)
     return send_from_directory(app.config['UPLOAD_FOLDER'], "res_{}".format(filename), as_attachment=True)
 
 
