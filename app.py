@@ -115,8 +115,8 @@ def sample():
 @app.route('/video_feed', methods=['POST'])
 def video_feed():
     print(UPLOAD_FOLDER)
-    Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
-    return eturn Response(analyse_video(pose_detector, lstm_classifier, filename), mimetype='text/event-stream')
+    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    
     
 @app.route('/files/<filename>')
 def get_file(filename):
