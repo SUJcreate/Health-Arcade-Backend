@@ -1,5 +1,5 @@
 import cv2
-
+import numpy
 WHITE_COLOR = (255, 255, 255)
 GREEN_COLOR = (0, 255, 0)
 
@@ -20,8 +20,15 @@ def filter_persons(outputs):
         persons[x] = desired_kp
     return (persons, p_indicies)
 
-
+def conv(t):
+    a=[0, 1]
+    a[0]=t[0].numpy()
+    a[0]=int(a[0])
+    a[1]=t[1].numpy()
+    a[1]=int(a[1])
+    return a
 def draw_keypoints(person, img):
+    person=[conv(t) for t in person]
     l_eye = person[1]
     r_eye = person[2]
     l_ear = person[3]
