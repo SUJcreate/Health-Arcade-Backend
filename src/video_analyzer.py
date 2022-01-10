@@ -32,20 +32,20 @@ def analyse_video(pose_detector, lstm_classifier, video_path):
     # frames per second of the input video
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     # total number of frames in the video
-    tot_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    #tot_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     # video output codec
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    #fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     # extract the file name from video path
-    file_name = ntpath.basename(video_path)
+    #file_name = ntpath.basename(video_path)
     # video writer
-    vid_writer = cv2.VideoWriter('res_{}'.format(
-        file_name), fourcc, 30, (width, height))
+    #vid_writer = cv2.VideoWriter('res_{}'.format(
+        #file_name), fourcc, 30, (width, height))
     # counter
     counter = 0
     # buffer to keep the output of detectron2 pose estimation
     buffer_window = []
     # start time
-    start = time.time()
+    #start = time.time()
     label = None
     # iterate through the video
     while True:
@@ -66,7 +66,7 @@ def analyse_video(pose_detector, lstm_classifier, video_path):
                 # actually, we expect only one person to be present in the video.
                 p = persons[0]
                 # draw the body joints on the person body
-                draw_keypoints(p, img)
+                #draw_keypoints(p, img)
                 # input feature array for lstm
                 features = []
                 # add pose estimate results to the feature array
@@ -75,7 +75,7 @@ def analyse_video(pose_detector, lstm_classifier, video_path):
                     features.append(row[1])
 
                 # append the feature array into the buffer
-                # not that max buffer size is 32 and buffer_window operates in a sliding window fashion
+                # note that max buffer size is 32 and buffer_window operates in a sliding window fashion
                 if len(buffer_window) < WINDOW_SIZE:
                     buffer_window.append(features)
                 else:
@@ -96,18 +96,19 @@ def analyse_video(pose_detector, lstm_classifier, video_path):
 
         # add predicted label into the frame
         if label is not None:
-            cv2.putText(img, 'Action: {}'.format(label),
-                        (int(width-400), height-50), cv2.FONT_HERSHEY_COMPLEX, 0.9, (102, 255, 255), 2)
+            print(label)
+            #cv2.putText(img, 'Action: {}'.format(label),
+                    #    (int(width-400), height-50), cv2.FONT_HERSHEY_COMPLEX, 0.9, (102, 255, 255), 2)
         # increment counter
         counter += 1
         # write the frame into the result video
-        vid_writer.write(img)
+        #vid_writer.write(img)
         # compute the completion percentage
-        percentage = int(counter*100/tot_frames)
+        #percentage = int(counter*100/tot_frames)
         # return the completion percentage
-        yield "data:" + str(percentage) + "\n\n"
-    analyze_done = time.time()
-    print("Video processing finished in ", analyze_done - start)
+        #yield "data:" + str(percentage) + "\n\n"
+    #analyze_done = time.time()
+    #print("Video processing finished in ", analyze_done - start)
 
 
 def stream_video(video_path):
